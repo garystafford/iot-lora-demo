@@ -10,57 +10,57 @@
 #include <Arduino_LPS22HB.h>
 #include <Arduino_APDS9960.h>
 
-const int UPDATE_FREQUENCY = 2000;     // Update frequency in ms
-const float CALIBRATION_FACTOR = -4.0; // Temperature calibration factor (Celsius)
+const int UPDATE_FREQUENCY = 2000;     // update frequency in ms
+const float CALIBRATION_FACTOR = -4.0; // temperature calibration factor (Celsius)
+const int ADDRESS = 116;
+const int NETWORD_ID = 6;
+const String PASSWORD = "92A0ECEC9000DA0DCF0CAAB0ABA2E0EF";
 
 void setup()
 {
   Serial.begin(9600);
 
-  Serial1.begin(115200); //default baudrate of module is 115200
-  delay(1000);           //wait for Lora device to be ready
+  Serial1.begin(115200); // default baudrate of module is 115200
+  delay(1000);           // wait for Lora device to be ready
 
-  Serial1.print("AT+ADDRESS=116\r\n"); //needs to be unique
-  delay(100);                          //wait for module to respond
+  Serial1.print((String)"AT+ADDRESS=" + ADDRESS + "\r\n"); // needs to be unique
+  delay(100);                          // wait for module to respond
 
-  Serial1.print("AT+NETWORKID=6\r\n"); //needs to be same for receiver and transmitter
-  delay(100);                          //wait for module to respond
+  Serial1.print((String)"AT+NETWORKID=" + NETWORD_ID + "\r\n"); // needs to be same for receiver and transmitter
+  delay(100);                          // wait for module to respond
 
-  Serial1.print("AT+CPIN=92A0ECEC9000DA0DCF0CAAB0ABA2E0EF\r\n"); //needs to be same for receiver and transmitter
-  delay(100);                                                    //wait for module to respond
-  Serial1.print("AT+CPIN?\r\n");
+  Serial1.print("AT+CPIN=" + PASSWORD + "\r\n"); // needs to be same for receiver and transmitter
+  delay(100);                                                    // wait for module to respond
+  Serial1.print("AT+CPIN?\r\n");                                 // confirm password is set
 
   if (!HTS.begin())
-  { // Initialize HTS221 sensor
+  { // initialize HTS221 sensor
     Serial.println("Failed to initialize humidity temperature sensor!");
-    while (1)
-      ;
+    while (1);
   }
 
   if (!BARO.begin())
-  { // Initialize LPS22HB sensor
+  { // initialize LPS22HB sensor
     Serial.println("Failed to initialize pressure sensor!");
-    while (1)
-      ;
+    while (1);
   }
 
-  // Avoid bad readings to start bug
+  // avoid bad readings to start bug
   // https://forum.arduino.cc/index.php?topic=660360.0
   BARO.readPressure();
   delay(1000);
 
   if (!APDS.begin())
-  { // Initialize APDS9960 sensor
+  { // initialize APDS9960 sensor
     Serial.println("Failed to initialize color sensor!");
-    while (1)
-      ;
+    while (1);
   }
 }
 
 void loop()
 {
   updateReadings();
-  delay(2000);
+  delay(UPDATE_FREQUENCY);
 }
 
 void updateReadings()
@@ -131,26 +131,28 @@ void displayResults(float t, float h, float p, int c[])
 String buildPayload(float t, float h, float p, int c[])
 {
   String readings = "";
-  readings = readings + t;
-  readings = readings + "|";
-  readings = readings + h;
-  readings = readings + "|";
-  readings = readings + p;
-  readings = readings + "|";
-  readings = readings + c[0];
-  readings = readings + "|";
-  readings = readings + c[1];
-  readings = readings + "|";
-  readings = readings + c[2];
-  readings = readings + "|";
-  readings = readings + c[3];
+  readings += t;
+  readings += "|";
+  readings += h;
+  readings += "|";
+  readings += p;
+  readings += "|";
+  readings += c[0];
+  readings += "|";
+  readings += c[1];
+  readings += "|";
+  readings += c[2];
+  readings += "|";
+  readings += c[3];
 
   String payload = "";
-  payload = payload + "AT+SEND=0,";
-  payload = payload + readings.length();
-  payload = payload + ",";
-  payload = payload + readings;
-  payload = payload + "\r\n";
+  payload += "AT+SEND=";
+  payload += ADDRESS;
+  payload += ",";
+  payload += readings.length();
+  payload += ",";
+  payload += readings;
+  payload += "\r\n";
 
   return payload;
 }
