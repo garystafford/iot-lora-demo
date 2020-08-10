@@ -30,8 +30,8 @@ void setup()
   delay(100);                                                   // wait for module to respond
 
   Serial1.print("AT+CPIN=" + PASSWORD + "\r\n"); // needs to be same for receiver and transmitter
-  delay(100);                                                    // wait for module to respond
-  Serial1.print("AT+CPIN?\r\n");                                 // confirm password is set
+  delay(100);                                    // wait for module to respond
+  Serial1.print("AT+CPIN?\r\n");                 // confirm password is set
 
   if (!HTS.begin())
   { // initialize HTS221 sensor
@@ -73,7 +73,7 @@ void updateReadings()
 
   String payload = buildPayload(temperature, humidity, pressure, colors);
   // Serial.println("Payload: " + payload); // display the payload for debugging
-  
+
   Serial1.print(payload); // send the payload over LoRaWAN WiFi
 
   displayResults(temperature, humidity, pressure, colors); // display the results for debugging
