@@ -1,5 +1,5 @@
 /*
-  Description: Transmits Arduino Nano 33 BLE Sense sensor telemetry over LoRaWAN WiFi,
+  Description: Transmits Arduino Nano 33 BLE Sense sensor telemetry over LoRaWAN,
                including temperature, humidity, barometric pressure, and color,
                using REYAX RYLR896 transceiver modules
                http://reyax.com/wp-content/uploads/2020/01/Lora-AT-Command-RYLR40x_RYLR89x_EN.pdf
