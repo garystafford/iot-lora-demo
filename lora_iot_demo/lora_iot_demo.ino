@@ -24,10 +24,10 @@ void setup()
   delay(1000);           // wait for Lora device to be ready
 
   Serial1.print((String)"AT+ADDRESS=" + ADDRESS + "\r\n"); // needs to be unique
-  delay(100);                          // wait for module to respond
+  delay(100);                                              // wait for module to respond
 
   Serial1.print((String)"AT+NETWORKID=" + NETWORK_ID + "\r\n"); // needs to be same for receiver and transmitter
-  delay(100);                          // wait for module to respond
+  delay(100);                                                   // wait for module to respond
 
   Serial1.print("AT+CPIN=" + PASSWORD + "\r\n"); // needs to be same for receiver and transmitter
   delay(100);                                                    // wait for module to respond
@@ -73,6 +73,7 @@ void updateReadings()
 
   String payload = buildPayload(temperature, humidity, pressure, colors);
   // Serial.println("Payload: " + payload); // display the payload for debugging
+  
   Serial1.print(payload); // send the payload over LoRaWAN WiFi
 
   displayResults(temperature, humidity, pressure, colors); // display the results for debugging
