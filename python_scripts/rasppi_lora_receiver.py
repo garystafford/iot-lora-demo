@@ -6,8 +6,7 @@ from datetime import datetime
 import serial
 from colr import color as colr
 
-
-# LoRa Wi-Fi IoT Sensor Demo
+# LoRaWAN IoT Sensor Demo
 # REYAX RYLR896 transceiver module
 # http://reyax.com/wp-content/uploads/2020/01/Lora-AT-Command-RYLR40x_RYLR89x_EN.pdf
 # Author: Gary Stafford
@@ -15,12 +14,17 @@ from colr import color as colr
 # To Run: python3 ./rasppi_lora_receiver.py /dev/ttyAMA0 115200
 
 
+ADDRESS = 116
+NETWORK_ID = 6
+PASSWORD = "92A0ECEC9000DA0DCF0CAAB0ABA2E0EF"
+
+
 def main():
     logging.basicConfig(filename='output.log', filemode='w', level=logging.DEBUG)
     args = get_args()  # get args
     payload = ""
 
-    print("Connecting to REYAX RYLR896 transceiver module...\n")
+    print("Connecting to REYAX RYLR896 transceiver module...")
     serial_conn = serial.Serial(
         port=args.tty,
         baudrate=int(args.baud_rate),
@@ -38,13 +42,13 @@ def main():
             serial_payload = serial_conn.readline()  # read data from serial port
             if len(serial_payload) > 0:
                 try:
-                    payload = serial_payload.decode(encoding="ASCII")
+                    payload = serial_payload.decode(encoding="ascii")
                 except UnicodeDecodeError:  # receiving corrupt data?
                     logging.error("UnicodeDecodeError: {}".format(serial_payload))
 
                 payload = payload[:-2]
                 print("\n----------")
-                print("Date/Time: {}".format(datetime.now()))
+                print("Timestamp: {}".format(datetime.now()))
                 print("Payload: {}".format(payload))
                 try:
                     data = parse_payload(payload)
@@ -116,58 +120,65 @@ def parse_payload(payload):
 
 
 def set_lora_config(serial_conn):
-    """Set the AES-128 32 hex digit password for the REYAX RYLR896 transceiver module"""
+    # configures the REYAX RYLR896 transceiver module
 
-    serial_conn.write(str.encode(
-        "AT+CPIN=92A0ECEC9000DA0DCF0CAAB0ABA2E0EF\r\n"))
+    serial_conn.write(str.encode("AT+ADDRESS=" + str(ADDRESS) + "\r\n"))
+    serial_payload = (serial_conn.readline())[:-2]
+    print("Address set?", serial_payload.decode(encoding="ascii"))
+
+    serial_conn.write(str.encode("AT+NETWORKID=" + str(NETWORK_ID) + "\r\n"))
+    serial_payload = (serial_conn.readline())[:-2]
+    print("Network Id set?", serial_payload.decode(encoding="ascii"))
+
+    serial_conn.write(str.encode("AT+CPIN=" + PASSWORD + "\r\n"))
     time.sleep(1)
     serial_payload = (serial_conn.readline())[:-2]
-    print("AES128 password set?", serial_payload.decode(encoding="utf-8"))
+    print("AES-128 password set?", serial_payload.decode(encoding="ascii"))
 
 
 def check_lora_config(serial_conn):
-    """Prints out the REYAX RYLR896 transceiver module's configuration"""
+    # prints out the REYAX RYLR896 transceiver module's configuration
 
     serial_conn.write(str.encode("AT?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("Module responding?", serial_payload.decode(encoding="utf-8"))
+    print("Module responding?", serial_payload.decode(encoding="ascii"))
 
     serial_conn.write(str.encode("AT+ADDRESS?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("Address:", serial_payload.decode(encoding="utf-8"))
+    print("Address:", serial_payload.decode(encoding="ascii"))
 
     serial_conn.write(str.encode("AT+VER?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("Firmware version:", serial_payload.decode(encoding="utf-8"))
+    print("Firmware version:", serial_payload.decode(encoding="ascii"))
 
     serial_conn.write(str.encode("AT+NETWORKID?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("Network Id:", serial_payload.decode(encoding="utf-8"))
+    print("Network Id:", serial_payload.decode(encoding="ascii"))
 
     serial_conn.write(str.encode("AT+IPR?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("UART baud rate:", serial_payload.decode(encoding="utf-8"))
+    print("UART baud rate:", serial_payload.decode(encoding="ascii"))
 
     serial_conn.write(str.encode("AT+BAND?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("RF frequency", serial_payload.decode(encoding="utf-8"))
+    print("RF frequency", serial_payload.decode(encoding="ascii"))
 
     serial_conn.write(str.encode("AT+CRFOP?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("RF output power", serial_payload.decode(encoding="utf-8"))
+    print("RF output power", serial_payload.decode(encoding="ascii"))
 
     serial_conn.write(str.encode("AT+MODE?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("Work mode", serial_payload.decode(encoding="utf-8"))
+    print("Work mode", serial_payload.decode(encoding="ascii"))
 
     serial_conn.write(str.encode("AT+PARAMETER?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("RF parameters", serial_payload.decode(encoding="utf-8"))
+    print("RF parameters", serial_payload.decode(encoding="ascii"))
 
     serial_conn.write(str.encode("AT+CPIN?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("AES128 password of the network",
-          serial_payload.decode(encoding="utf-8"))
+    print("AES-128 password of the network",
+          serial_payload.decode(encoding="ascii"))
 
 
 if __name__ == "__main__":
