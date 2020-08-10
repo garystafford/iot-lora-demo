@@ -13,7 +13,7 @@
 const int UPDATE_FREQUENCY = 2000;     // update frequency in ms
 const float CALIBRATION_FACTOR = -4.0; // temperature calibration factor (Celsius)
 const int ADDRESS = 116;
-const int NETWORD_ID = 6;
+const int NETWORK_ID = 6;
 const String PASSWORD = "92A0ECEC9000DA0DCF0CAAB0ABA2E0EF";
 
 void setup()
@@ -26,7 +26,7 @@ void setup()
   Serial1.print((String)"AT+ADDRESS=" + ADDRESS + "\r\n"); // needs to be unique
   delay(100);                          // wait for module to respond
 
-  Serial1.print((String)"AT+NETWORKID=" + NETWORD_ID + "\r\n"); // needs to be same for receiver and transmitter
+  Serial1.print((String)"AT+NETWORKID=" + NETWORK_ID + "\r\n"); // needs to be same for receiver and transmitter
   delay(100);                          // wait for module to respond
 
   Serial1.print("AT+CPIN=" + PASSWORD + "\r\n"); // needs to be same for receiver and transmitter
