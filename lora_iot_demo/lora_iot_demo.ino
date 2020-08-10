@@ -10,7 +10,7 @@
 #include <Arduino_LPS22HB.h>
 #include <Arduino_APDS9960.h>
 
-const int UPDATE_FREQUENCY = 2000;     // update frequency in ms
+const int UPDATE_FREQUENCY = 5000;     // update frequency in ms
 const float CALIBRATION_FACTOR = -4.0; // temperature calibration factor (Celsius)
 const int ADDRESS = 116;
 const int NETWORK_ID = 6;
@@ -26,9 +26,11 @@ void setup()
 
   // needs all need to be same for receiver and transmitter
   Serial1.print((String)"AT+ADDRESS=" + ADDRESS + "\r\n");
+  delay(200);
   Serial1.print((String)"AT+NETWORKID=" + NETWORK_ID + "\r\n");
+  delay(200);
   Serial1.print("AT+CPIN=" + PASSWORD + "\r\n");
-  delay(100);
+  delay(200);
   Serial1.print("AT+CPIN?\r\n"); // confirm password is set
 
   if (!HTS.begin())

@@ -42,7 +42,7 @@ def main():
             serial_payload = serial_conn.readline()  # read data from serial port
             if len(serial_payload) > 0:
                 try:
-                    payload = serial_payload.decode(encoding="ascii")
+                    payload = serial_payload.decode(encoding="utf-8")
                 except UnicodeDecodeError:  # receiving corrupt data?
                     logging.error("UnicodeDecodeError: {}".format(serial_payload))
 
@@ -124,16 +124,16 @@ def set_lora_config(serial_conn):
 
     serial_conn.write(str.encode("AT+ADDRESS=" + str(ADDRESS) + "\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("Address set?", serial_payload.decode(encoding="ascii"))
+    print("Address set?", serial_payload.decode(encoding="utf-8"))
 
     serial_conn.write(str.encode("AT+NETWORKID=" + str(NETWORK_ID) + "\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("Network Id set?", serial_payload.decode(encoding="ascii"))
+    print("Network Id set?", serial_payload.decode(encoding="utf-8"))
 
     serial_conn.write(str.encode("AT+CPIN=" + PASSWORD + "\r\n"))
     time.sleep(1)
     serial_payload = (serial_conn.readline())[:-2]
-    print("AES-128 password set?", serial_payload.decode(encoding="ascii"))
+    print("AES-128 password set?", serial_payload.decode(encoding="utf-8"))
 
 
 def check_lora_config(serial_conn):
@@ -141,44 +141,44 @@ def check_lora_config(serial_conn):
 
     serial_conn.write(str.encode("AT?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("Module responding?", serial_payload.decode(encoding="ascii"))
+    print("Module responding?", serial_payload.decode(encoding="utf-8"))
 
     serial_conn.write(str.encode("AT+ADDRESS?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("Address:", serial_payload.decode(encoding="ascii"))
+    print("Address:", serial_payload.decode(encoding="utf-8"))
 
     serial_conn.write(str.encode("AT+VER?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("Firmware version:", serial_payload.decode(encoding="ascii"))
+    print("Firmware version:", serial_payload.decode(encoding="utf-8"))
 
     serial_conn.write(str.encode("AT+NETWORKID?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("Network Id:", serial_payload.decode(encoding="ascii"))
+    print("Network Id:", serial_payload.decode(encoding="utf-8"))
 
     serial_conn.write(str.encode("AT+IPR?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("UART baud rate:", serial_payload.decode(encoding="ascii"))
+    print("UART baud rate:", serial_payload.decode(encoding="utf-8"))
 
     serial_conn.write(str.encode("AT+BAND?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("RF frequency", serial_payload.decode(encoding="ascii"))
+    print("RF frequency", serial_payload.decode(encoding="utf-8"))
 
     serial_conn.write(str.encode("AT+CRFOP?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("RF output power", serial_payload.decode(encoding="ascii"))
+    print("RF output power", serial_payload.decode(encoding="utf-8"))
 
     serial_conn.write(str.encode("AT+MODE?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("Work mode", serial_payload.decode(encoding="ascii"))
+    print("Work mode", serial_payload.decode(encoding="utf-8"))
 
     serial_conn.write(str.encode("AT+PARAMETER?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("RF parameters", serial_payload.decode(encoding="ascii"))
+    print("RF parameters", serial_payload.decode(encoding="utf-8"))
 
     serial_conn.write(str.encode("AT+CPIN?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
     print("AES-128 password of the network",
-          serial_payload.decode(encoding="ascii"))
+          serial_payload.decode(encoding="utf-8"))
 
 
 if __name__ == "__main__":
