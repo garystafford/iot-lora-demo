@@ -47,11 +47,11 @@ def main():
                     logging.error("UnicodeDecodeError: {}".format(serial_payload))
 
                 payload = payload[:-2]
-                print("\n----------")
-                print("Timestamp: {}".format(datetime.now()))
-                print("Payload: {}".format(payload))
                 try:
                     data = parse_payload(payload)
+                    print("\n----------")
+                    print("Timestamp: {}".format(datetime.now()))
+                    print("Payload: {}".format(payload))
                     print("Sensor Data: {}".format(data))
                     display_temperature(data[0])
                     display_humidity(data[1])
