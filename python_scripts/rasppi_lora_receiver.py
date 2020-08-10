@@ -7,7 +7,7 @@ import serial
 from colr import color as colr
 
 # LoRaWAN IoT Sensor Demo
-# REYAX RYLR896 transceiver module
+# Using REYAX RYLR896 transceiver modules
 # http://reyax.com/wp-content/uploads/2020/01/Lora-AT-Command-RYLR40x_RYLR89x_EN.pdf
 # Author: Gary Stafford
 # Requirements: python3 -m pip install --user -r requirements.txt

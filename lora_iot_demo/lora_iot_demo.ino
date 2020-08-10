@@ -20,18 +20,15 @@ void setup()
 {
   Serial.begin(9600);
 
-  Serial1.begin(115200); // default baudrate of module is 115200
-  delay(1000);           // wait for Lora device to be ready
+  Serial1.begin(115200); // default baud rate of module is 115200
+  delay(1000);           // wait for LoRa module to be ready
 
-  Serial1.print((String)"AT+ADDRESS=" + ADDRESS + "\r\n"); // needs to be unique
-  delay(100);                                              // wait for module to respond
-
-  Serial1.print((String)"AT+NETWORKID=" + NETWORK_ID + "\r\n"); // needs to be same for receiver and transmitter
-  delay(100);                                                   // wait for module to respond
-
-  Serial1.print("AT+CPIN=" + PASSWORD + "\r\n"); // needs to be same for receiver and transmitter
-  delay(100);                                    // wait for module to respond
-  Serial1.print("AT+CPIN?\r\n");                 // confirm password is set
+  // needs all need to be same for receiver and transmitter
+  Serial1.print((String)"AT+ADDRESS=" + ADDRESS + "\r\n");
+  Serial1.print((String)"AT+NETWORKID=" + NETWORK_ID + "\r\n");
+  Serial1.print("AT+CPIN=" + PASSWORD + "\r\n");
+  delay(100);
+  Serial1.print("AT+CPIN?\r\n"); // confirm password is set
 
   if (!HTS.begin())
   { // initialize HTS221 sensor
