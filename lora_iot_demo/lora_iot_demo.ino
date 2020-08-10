@@ -15,6 +15,7 @@ const float CALIBRATION_FACTOR = -4.0; // temperature calibration factor (Celsiu
 const int ADDRESS = 116;
 const int NETWORK_ID = 6;
 const String PASSWORD = "92A0ECEC9000DA0DCF0CAAB0ABA2E0EF";
+const String DELIMITER = "|";
 
 void setup()
 {
@@ -130,17 +131,17 @@ String buildPayload(float t, float h, float p, int c[])
 {
   String readings = "";
   readings += t;
-  readings += "|";
+  readings += DELIMITER;
   readings += h;
-  readings += "|";
+  readings += DELIMITER;
   readings += p;
-  readings += "|";
+  readings += DELIMITER;
   readings += c[0];
-  readings += "|";
+  readings += DELIMITER;
   readings += c[1];
-  readings += "|";
+  readings += DELIMITER;
   readings += c[2];
-  readings += "|";
+  readings += DELIMITER;
   readings += c[3];
 
   String payload = "";
