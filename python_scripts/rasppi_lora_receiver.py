@@ -11,9 +11,9 @@ from colr import color as colr
 # http://reyax.com/wp-content/uploads/2020/01/Lora-AT-Command-RYLR40x_RYLR89x_EN.pdf
 # Author: Gary Stafford
 # Requirements: python3 -m pip install --user -r requirements.txt
-# To Run: python3 ./rasppi_lora_receiver.py /dev/ttyAMA0 115200
+# To Run: python3 ./rasppi_lora_receiver.py --tty /dev/ttyAMA0 --baud-rate 115200
 
-
+# constants
 ADDRESS = 116
 NETWORK_ID = 6
 PASSWORD = "92A0ECEC9000DA0DCF0CAAB0ABA2E0EF"
@@ -102,9 +102,8 @@ def display_temperature(value):
 
 def get_args():
     arg_parser = ArgumentParser(description="BLE IoT Sensor Demo")
-    arg_parser.add_argument("tty", help="serial tty", default="/dev/ttyAMA0")
-    arg_parser.add_argument(
-        "baud_rate", help="serial baud rate", default=115200)
+    arg_parser.add_argument("--tty", required=True, help="serial tty", default="/dev/ttyAMA0")
+    arg_parser.add_argument("--baud-rate", required=True, help="serial baud rate", default=1152000)
     args = arg_parser.parse_args()
     return args
 
@@ -137,8 +136,6 @@ def set_lora_config(serial_conn):
 
 
 def check_lora_config(serial_conn):
-    # prints out the REYAX RYLR896 transceiver module's configuration
-
     serial_conn.write(str.encode("AT?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
     print("Module responding?", serial_payload.decode(encoding="utf-8"))
@@ -147,13 +144,9 @@ def check_lora_config(serial_conn):
     serial_payload = (serial_conn.readline())[:-2]
     print("Address:", serial_payload.decode(encoding="utf-8"))
 
-    serial_conn.write(str.encode("AT+VER?\r\n"))
-    serial_payload = (serial_conn.readline())[:-2]
-    print("Firmware version:", serial_payload.decode(encoding="utf-8"))
-
     serial_conn.write(str.encode("AT+NETWORKID?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("Network Id:", serial_payload.decode(encoding="utf-8"))
+    print("Network id:", serial_payload.decode(encoding="utf-8"))
 
     serial_conn.write(str.encode("AT+IPR?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
@@ -177,7 +170,7 @@ def check_lora_config(serial_conn):
 
     serial_conn.write(str.encode("AT+CPIN?\r\n"))
     serial_payload = (serial_conn.readline())[:-2]
-    print("AES-128 password of the network",
+    print("AES128 password of the network",
           serial_payload.decode(encoding="utf-8"))
 
 
