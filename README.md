@@ -1,3 +1,14 @@
-# LoRa for IoT: Getting Started with LoRa and LoRaWAN Protocols for Low Power, Wide Area Networking of IoT
+# AWS IoT and LoRa: Collecting and Analyzing IoT Data in Near Real-Time with AWS IoT, LoRa, and LoRaWAN
 
-Code for the post, [LoRa for IoT: Getting Started with LoRa and LoRaWAN Protocols for Low Power, Wide Area Networking of IoT](https://programmaticponderings.com/2020/08/10/lora-and-lorawan-for-iot-getting-started-with-long-range-and-lorawan-specification-for-low-power-wide-area-networking/).
+Code for the post, [AWS IoT and LoRa: Collecting and Analyzing IoT Data in Near Real-Time with AWS IoT, LoRa, and LoRaWAN](https://programmaticponderings.com/).
+
+## Deploy CloudFormation Stack
+
+```bash
+aws cloudformation create-stack \
+  --stack-name lora-iot-demo \
+  --template-body file://cloudformation/iot-analytics.yaml \
+  --parameters ParameterKey=ProjectName,ParameterValue=lora-iot-demo \
+               ParameterKey=IoTTopicName,ParameterValue=lora-iot-demo \
+  --capabilities CAPABILITY_NAMED_IAM
+```

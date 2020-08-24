@@ -17,12 +17,20 @@ const int NETWORK_ID = 6;
 const String PASSWORD = "92A0ECEC9000DA0DCF0CAAB0ABA2E0EF";
 const String DELIMITER = "|";
 
+String uid = "";
+
 void setup()
 {
   Serial.begin(9600);
 
   Serial1.begin(115200); // default baud rate of module is 115200
   delay(1000);           // wait for LoRa module to be ready
+
+  // get unique transceiver id to identify iot device on network
+  Serial1.print((String)"AT+UID?\r\n");
+  uid = Serial1.readString();
+  uid.replace("+UID=", ""); // trim off '+UID=' at start of line
+  uid.replace("\r\n", ""); // trim off CR/LF at end of line
 
   // needs all need to be same for receiver and transmitter
   Serial1.print((String)"AT+ADDRESS=" + ADDRESS + "\r\n");
@@ -72,7 +80,7 @@ void updateReadings()
   getColor(colors);
 
   String payload = buildPayload(temperature, humidity, pressure, colors);
-  // Serial.println("Payload: " + payload); // display the payload for debugging
+  Serial.println("Payload: " + payload); // display the payload for debugging
 
   Serial1.print(payload); // send the payload over LoRaWAN WiFi
 
@@ -112,6 +120,7 @@ void getColor(int c[])
 
 void displayResults(float t, float h, float p, int c[])
 {
+  Serial.println((String)"UID: " + uid);
   Serial.print("Temperature: ");
   Serial.println(t);
   Serial.print("Humidity: ");
@@ -132,6 +141,8 @@ void displayResults(float t, float h, float p, int c[])
 String buildPayload(float t, float h, float p, int c[])
 {
   String readings = "";
+  readings += uid;
+  readings += DELIMITER;
   readings += t;
   readings += DELIMITER;
   readings += h;
